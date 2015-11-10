@@ -1,5 +1,21 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+################################################################################
+#
+#                     Module [asterisk_log] MLMConseil
+#                    ----------------------------------
+#
+#                    ----------------------------------
+#                   permet de connecter à PostgreSQL et inserer
+#                   les nouvels appels d'asterisk
+#                  ----------------------------------------
+#                       langage : Python 2.7
+#                       date creation : 30/10/2015
+#                       date modification : /2015
+#                       version : 0.1
+#                       auteur  : Bouslahi Yacine
+#
+################################################################################
 from openerp.osv import fields, osv, orm
 import logging
 import datetime
@@ -36,7 +52,7 @@ class asterisk_log(osv.Model):
             		("%s  Nouvels appels trouvés" % i))
 
 		finally:
-			 _logger.debug("Mise a jour des appels reussie: %s\%s appels trouvé" % (i, up))
+			 _logger.info("Mise a jour des appels reussie: %s\%s appels trouvé" % (i, up))
 
 
 	_columns = {
