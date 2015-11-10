@@ -19,33 +19,24 @@ class asterisk_log(osv.Model):
 		i = 0
 		up = None
 		try:
-			up, i , msg= update_calls.update()
+			#Appel de la fonction update du fichier update_calls.py
+			#masquer la variable up 
+			up, i , msg= update_calls.update() 
 			if not up:
 				raise orm.except_orm(
-					("Erreur de mis à jour"),
+					("Erreur de mise à jour"),
                 	("Details %s" % msg))
 			elif up:
-				raise orm.except_orm(
-				("Mis à jour reussie"),
-            	("la liste est mis a jour %s up = %s" % (i, up)))
+				if i==0:
+					raise orm.except_orm(("Mise à jour"),
+						("Pas de nouvels appels"))
+				else:
+					raise orm.except_orm(
+					("Mise à jour reussie"),
+            		("%s  Nouvels appels trouvés" % i))
 
 		finally:
 			 _logger.debug("Mise a jour des appels reussie: %s\%s appels trouvé" % (i, up))
-			# raise orm.except_orm(
-			# 	("saha"),
-   #          	("la liste est mis a jour %s" % i))
-        	    	
-
-        # except Exception, e:
-        #     raise orm.except_orm(
-        #         _("Erreur de mis à jour"),
-        #         _("Probleme d'nsertion de données %s" % e))
-        # finally:
-        #     if ast_manager:
-        #         ast_manager.Logoff()
-        # raise orm.except_orm(
-        #     _("Mis à jour reussie"),
-        #     _("la liste est mis a jour"))
 
 
 	_columns = {

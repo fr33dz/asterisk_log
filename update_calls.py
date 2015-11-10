@@ -66,17 +66,32 @@ def update():
                 
                 if ligne_file > max_id-2: #changer a max_id-1
                     i +=1
-                    appelant = str(ligne.split(",")[4].replace('"','')) #str(ligne.split(",")[1].replace('"','')) retourne le num
-                    appele = str(ligne.split(",")[2].replace('"','')) #dans le cas ou c un appel entrant
-                    date_heure = len(ligne.split(",")[9].replace('"','').split(" "))
-                    if date_heure == 2:
-                        date = str(ligne.split(",")[9].replace('"','').split(" ")[0])
-                        heure = str(ligne.split(",")[9].replace('"','').split(" ")[1])
+                    appelant = str(ligne.split(",")[4].replace('"','')) # recupere au format Merouane <208>
+                    appele = str(ligne.split(",")[2].replace('"','')) 
+                    #dans le cas ou c un appel entrant
+                    if appele == '0033185092063':
+                        appelant = str(ligne.split(",")[1].replace('"','')) # recuperer juste le num
+
+                        date_heure = len(ligne.split(",")[13].replace('"','').split(" "))
+                        if date_heure == 2:
+                            date = str(ligne.split(",")[13].replace('"','').split(" ")[0])
+                            heure = str(ligne.split(",")[13].replace('"','').split(" ")[1])
+                        else:
+                            date = str(ligne.split(",")[13].replace('"',''))
+                            heure = '00:00:00'
+                        duree = str(ligne.split(",")[15].replace('"',''))
+                        etat = str(ligne.split(",")[16].replace('"',''))
+                    #dans le cas ou c un appel sortant
                     else:
-                        date = str(ligne.split(",")[9].replace('"',''))
-                        heure = '00:00:00'
-                    duree = str(ligne.split(",")[13].replace('"',''))
-                    etat = str(ligne.split(",")[14].replace('"',''))
+                        date_heure = len(ligne.split(",")[9].replace('"','').split(" "))
+                        if date_heure == 2:
+                            date = str(ligne.split(",")[9].replace('"','').split(" ")[0])
+                            heure = str(ligne.split(",")[9].replace('"','').split(" ")[1])
+                        else:
+                            date = str(ligne.split(",")[9].replace('"',''))
+                            heure = '00:00:00'
+                        duree = str(ligne.split(",")[13].replace('"',''))
+                        etat = str(ligne.split(",")[14].replace('"',''))
                     id_appel +=1
                     req = "INSERT INTO asterisk_log(id, etat, appele, create_date, create_uid, appelant, duree, write_uid, write_date, date, heure)        \
                         VALUES ({0}, '{5}', '{2}', '{6}', 1, '{1}', '{4}', 1,'{6}', '{3}', '{7}')".format(id_appel, appelant, appele, date, duree, etat, date_mnt, heure)
