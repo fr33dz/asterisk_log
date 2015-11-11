@@ -21,16 +21,17 @@ import logging
 import datetime
 import time
 import sys, os
-from config import *
 
 _logger = logging.getLogger(__name__)
 
-#PATH =
+# chemin absolu vers le fichier Master.csv
+PATH_MASTER = 'C:\\Program Files (x86)\\Odoo 8.0-20150719\\server\\openerp\\addons\\asterisk_log\\Master.csv' 
+
 class asterisk_log(osv.Model):
     _name = 'asterisk.log'
     _description = "Informations sur les appels"
     _order = 'date' #'date desc'  DESC
-    # _log_access = False
+    _log_access = False
 
     _columns = {
         #'name': fields.many2one('res.partner', 'Nom'), 
@@ -47,18 +48,19 @@ class asterisk_log(osv.Model):
         i = 0
         ligne_file = 0
         max_id = 0
+        req = None
         try:
             date_mnt = time.strftime("%d-%m-%Y")
-            req1 = "SELECT max(id) FROM asterisk_log" #" SELECT COUNT(*) FROM asterisk_log"
+            req1 = "SELECT count(*) FROM asterisk_log" #" SELECT COUNT(*) FROM asterisk_log"
             cr.execute(req1)
             id_appel = cr.fetchone()[0]
             if id_appel == None:
 				id_appel = 0
             max_id = id_appel
             try:
-                file = open(PATH,'r')
+                file = open(PATH_MASTER,'r')
             except IOError:
-                raise orm.except_orm(("Erreur :"),("fichier Master.csv introuvable %s" % (os.path.abspath(PATH))))
+                raise orm.except_orm(("Erreur :"),("fichier Master.csv introuvable %s" % (os.path.abspath(PATH_MASTER))))
                 # sys.exit(0)
 
             for ligne in file.readlines():
@@ -78,6 +80,12 @@ class asterisk_log(osv.Model):
                     		heure = '00:00:00'
                     	duree = str(ligne.split(",")[15].replace('"',''))
                     	etat = str(ligne.split(",")[16].replace('"',''))
+                        id_appel +=1
+                        req = "INSERT INTO asterisk_log(appelant, appele, date, heure, duree, etat)  \
+                                            VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}' \
+                                                )".format(appelant, appele, date, heure, duree, etat)
+
+
                      ##dans le cas ou c un appel sortant
                     else:
                         date_heure = len(ligne.split(",")[9].replace('"','').split(" "))
@@ -89,25 +97,21 @@ class asterisk_log(osv.Model):
                 			heure = '00:00:00'
                         duree = str(ligne.split(",")[13].replace('"',''))
                         etat = str(ligne.split(",")[14].replace('"',''))
-                	id_appel +=1
-                	req = "INSERT INTO asterisk_log(id, etat, appele, create_date, create_uid, appelant, duree, write_uid, write_date, date, heure)        \
-                        VALUES ({0}, '{5}', '{2}', '{6}', 1, '{1}', '{4}', 1,'{6}', '{3}', '{7}')".format(id_appel, appelant, appele, date, duree, etat, date_mnt, heure)
+
+                    	id_appel +=1
+                    	req = "INSERT INTO asterisk_log(appelant, appele, date, heure, duree, etat)  \
+                                                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}' \
+                                                    )".format(appelant, appele, date, heure, duree, etat)
 
                     cr.execute(req)
                     cr.commit()
-                    cr.close()
                 ligne_file +=1
-
             file.close
-            #print " Nombre de lignes inseree : %s" %i
-
 
         except Exception as err:
         	raise orm.except_orm(
 				("Erreur :"),
-                ("requete incorrecte %s" % err))
-        	# sys.exit(0)
-
+                ("requete incorrecte  ! \n details :  %s \n req = %s" % (err, req)))
         else:
         	if i==0:
 				raise orm.except_orm(("Mise à jour"),
