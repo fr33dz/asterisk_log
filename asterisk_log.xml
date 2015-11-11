@@ -7,28 +7,15 @@
             <field name="name">asterisk.log.form</field>
             <field name="model">asterisk.log</field>
             <field name="arch" type="xml">
-			
                 <form string="Asterisk log">
-                    
-                        <!-- <header> -->
-                    
-                    <!-- </header> -->
-                    
-                    <!-- <div name="buttons" class="oe_right oe_button_box"> -->
                     <sheet>
-                        <!-- <field name="mise_a_jour" readonly="1" /> -->
                         <footer>
-                            <!-- renommer la focntion update_calls -->
-                            <button name="update_tree" type="object"
+                            <button name="update_calls" type="object"
                                 string="Mettre à jour" icon="gtk-refresh" /> 
-                                <!--  fa-asterisk , gtk-apply-->
                             <button special="cancel" string="Annuler" icon="gtk-cancel" />
                         </footer>
-                    </sheet>
-                    <!-- </div> -->
-                                           
+                    </sheet>                                           
 				</form>
-            
 			</field>
         </record>
 		
@@ -37,12 +24,7 @@
             <field name="name">asterisk.log.tree</field>
             <field name="model">asterisk.log</field>
             <field name="arch" type="xml">
-                <!-- <header> -->
-                        <!-- <button name="_update_tree" type="object" string="Actualiser" class="oe_highlight" /> -->
-                <!-- </header> -->
                 <tree string="Les appels" default_order="date desc">
-                    
-
                     <field name="appelant" />
                     <field name="appele" />
                     <field name="date" />
@@ -59,7 +41,8 @@
             <field name="model">asterisk.log</field>
             <field name="arch" type="xml">
                 <search string="Les appels">
-                    <!-- <filter string="Aujourd'hui" domain="[('date','=',(context_today().strftime('%Y-%m-%d'))]" name="Aujourd'hui"/> -->
+                    <!-- Ajouter un filtre pour les appels sortants et entrants -->
+                    <!-- <filter string="Sortant" domain="[('appelant','=',(context_today().strftime('%Y-%m-%d'))]" name="Aujourd'hui"/> -->
                     <filter string="Aujourd'hui" domain="[('date','&gt;=',context_today().strftime('%Y-%m-%d'))]" name="Aujourd'hui"/> 
                     
                     <filter string="Répondu" domain="[('etat','=','ANSWERED')]" name="etat_repondu" />
@@ -89,25 +72,18 @@
                 <graph string="Appels" type="bar" stacked="True"><!-- <graph string="appels" type="pivot"> -->
                     <field name="date" type="row"/>
                     <field name="appelant" type="col" interval="month"/>
-                    <!-- <field name="worked_hours" type="measure"/> -->
                 </graph>
             </field>
         </record>
 
 
-        <!-- Action asterisk log view-->
+        <!-- Action asterisk log -->
         <record id="action_asterisk_log" model="ir.actions.act_window">
             <field name="name" >Tous les appels</field>
             <field name="res_model">asterisk.log</field>
             <field name="view_mode">tree,form,graph</field>
         </record>
-		
-		
-
         
-        <!-- <menuitem name="Asterisk log" id="asterisk_log_menu" parent="hr.menu_hr_root" sequence="25" /> -->
-
-        <!-- <menuitem name="Les candidats" id="hr_rec_candidat_menu" parent="hr_rec_candidature_menu" sequence="16" action="hr_rec_candidat_view"/> -->
         
         <!-- Menu asterisk log -->
         <menuitem name="Asterisk log"
@@ -117,10 +93,6 @@
         <menuitem id="base.menu_appels" name="Appels" parent="base.asterisk_log" sequence="9"/>
         <!-- asterisk log > appels > appels  -->
         <menuitem name="Les Appels" id="asterisk_log-appels_menu" parent="base.menu_appels" sequence="10" action="action_asterisk_log"/>
-
-
-
-		
-
+	
     </data>
 </openerp>

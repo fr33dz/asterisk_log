@@ -6,8 +6,8 @@
 #                    ----------------------------------
 #
 #                    ----------------------------------
-#                   permet de connecter à PostgreSQL et inserer
-#                   les nouvels appels d'asterisk
+#                   permet de recharger les appels d'asterisk
+#                   par le fichier "Master.csv" 
 #                  ----------------------------------------
 #                       langage : Python 2.7
 #                       date creation : 30/10/2015
@@ -17,15 +17,5 @@
 #
 ################################################################################
 
-
-
-########################## POSTGRESQL CONFIG
-
-HOST = '127.0.0.1' 
-PORT = 5432          
-DATABASE = 'BDD_Translation'
-USER = 'openpg'     
-PASSWORD = 'openpgpwd'		
-
-########################## Master.csv Path 
-PATH = 'C:\\Program Files (x86)\\Odoo 8.0-20150719\\server\\openerp\\addons\\asterisk_log\\Master.csv'#'Master.csv'   # chemin vers le fichier Master.csv
+# chemin absolu vers le fichier Master.csv
+PATH = 'C:\\Program Files (x86)\\Odoo 8.0-20150719\\server\\openerp\\addons\\asterisk_log\\Master.csv' 
